@@ -17,7 +17,7 @@ end
 
 defimpl Bencode,  for:  Integer do
   def encode(i) do
-      String.to_char_list!("i#{i}e")
+      "i#{i}e"
   end
   def decode(_) do
     raise "no specific decoder for this type" 
@@ -64,7 +64,7 @@ defimpl Bencode,  for: BitString do
 
   # decode integer
   defp pdecode1(<<?i, rest::binary>>) do
-    [_, i,rest] = Regex.run(%r/([0-9]+)e(.*)$/, rest)
+    [_, i,rest] = Regex.run(%r/([-0-9]+)e(.*)$/, rest)
     {i , _ } = Integer.parse(i)
     {i, rest}
   end
@@ -90,7 +90,7 @@ defimpl Bencode,  for: BitString do
 
   # decode string
   # defp pdecode1(bin), do: raise "unable to decode #{bin}"
-
+  defp pdecodeList(<<>>,acc), do: {:lists.reverse(acc),<<>>}
   defp pdecodeList(<<?e, rest::binary>>,acc), do: {:lists.reverse(acc),rest}
   defp pdecodeList(bin,acc) do
     {e,rest} = pdecode1(bin)
@@ -105,7 +105,7 @@ defimpl Bencode,  for: BitString do
   defp pdecodeDic(bin,dic) do
     {k,rest} = pdecode1(bin)
     {v,rest} = pdecode1(rest)
-    dic = Dict.put(dic, k , v)
+    dic = Dict.put(dic, Kernel.binary_to_atom(k) , v)
     pdecodeDic(rest,dic)
   end
 end

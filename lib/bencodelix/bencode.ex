@@ -5,15 +5,22 @@ defprotocol Bencode do
    def decode(thing)
 end  
 
-defimpl Bencode,  for: Atom do
+defimpl Bencode,  for:  Atom do
   def encode(a) do
      Bencode.encode(Kernel.atom_to_binary(a))
   end
+  def decode(_) do
+    raise "no specific decoder for this type" 
+  end
+
 end
 
-defimpl Bencode,  for: Integer do
+defimpl Bencode,  for:  Integer do
   def encode(i) do
       String.to_char_list!("i#{i}e")
+  end
+  def decode(_) do
+    raise "no specific decoder for this type" 
   end
 end
   
@@ -22,12 +29,18 @@ defimpl Bencode, for: List do
       l = lc x inlist thing, do: [Bencode.encode(x)]
       String.from_char_list!(List.flatten(["l", l, "e"]))
   end  
+  def decode(_) do
+    raise "no specific decoder for this type" 
+  end
 end
 
 defimpl Bencode, for: HashDict do
   def encode(dict) do
     l = lc k inlist Dict.keys(dict), do: [Bencode.encode(k), Bencode.encode(Dict.get(dict, k))]
     String.from_char_list!(List.flatten(["d",  l , "e"]))
+  end
+  def decode(_) do
+    raise "no specific decoder for this type" 
   end
 end  
 

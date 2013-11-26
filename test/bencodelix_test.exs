@@ -9,8 +9,12 @@ defmodule BencodelixTest do
     assert(Bencode.encode(-42) == "i-42e")
   end
 
+  test "decode  int" do
+    assert(Bencode.decode("i42e") == 42)
+  end
+
   test "decode minus int" do
-    assert(Bencode.decode("i-42e") == [-42] )
+    assert(Bencode.decode("i-42e") == -42)
   end
 
   test "encode str" do
@@ -22,7 +26,7 @@ defmodule BencodelixTest do
   end
 
   test "encode decode string" do
-    assert(Bencode.decode(Bencode.encode "aze") == ["aze"])
+    assert(Bencode.decode(Bencode.encode "aze") == "aze")
   end
 
   test "encode  dic" do
@@ -36,11 +40,12 @@ defmodule BencodelixTest do
     dic = HashDict.new()
     dic = Dict.put(dic, :hello, "world")
     dic = Dict.put(dic, :number,42)
-    assert(Bencode.decode(Bencode.encode dic) ==  [dic])
+    assert(Bencode.decode(Bencode.encode dic) ==  dic)
   end  
 
   test "encode decode nested list" do
-    assert(Bencode.decode(Bencode.encode([1,2,"aze",["a"]])) == [[1, 2, "aze", ["a"]]])
+     l = [1,2,"aze",["a"]]
+     assert(Bencode.decode(Bencode.encode(l)) == l )
   end    
 end
 

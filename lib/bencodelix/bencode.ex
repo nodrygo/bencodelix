@@ -57,7 +57,7 @@ defimpl Bencode,  for: BitString do
   def decode(s), do: pdecode(s,[])
 
   defp pdecode(<<>>,acc), do: :lists.reverse(acc)
-  defp pdecode(bin,acc) do acc
+  defp pdecode(bin,acc) do 
       {v,r} = pdecode1(bin)
       pdecode(r,[v|acc])
   end
@@ -81,6 +81,7 @@ defimpl Bencode,  for: BitString do
   end
 
   # decode string
+  defp pdecode1(""), do: ""
   defp pdecode1(<<n::integer, _::binary>> = bin)  when n >= ?0 and n <= ?9 do
       [_, strl,rest] = Regex.run(%r/^([0-9]+):(.*)$/, bin)
       {lon,_} = Integer.parse(strl)

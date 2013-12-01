@@ -3,7 +3,7 @@ defmodule Bencodelix.Mixfile do
 
   def project do
     [ app: :bencodelix,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "> 0.10.3",
       deps: deps ]
   end

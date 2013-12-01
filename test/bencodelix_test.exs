@@ -21,6 +21,10 @@ defmodule BencodelixTest do
     assert(Bencode.encode([42,"az"]) == "li42e2:aze")
   end
 
+  test "encode decode mpty string" do
+    assert(Bencode.decode(Bencode.encode "") == [""])
+  end
+
   test "encode decode string" do
     assert(Bencode.decode(Bencode.encode "aze") == ["aze"])
   end

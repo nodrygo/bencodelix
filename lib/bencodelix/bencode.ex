@@ -56,8 +56,16 @@ defimpl Bencode,  for: BitString do
 
   def decode(s), do: pdecode(s,[])
 
-  defp pdecode(<<>>,acc), do: :lists.reverse(acc)
+# <<<<<<< HEAD
+  # defp pdecode(<<>>,acc), do: :lists.reverse(acc)
+  # defp pdecode(bin,acc) do 
+# =======
+  defp pdecode(<<>>,acc) do 
+    [res|_] = :lists.reverse(acc)
+     res
+  end
   defp pdecode(bin,acc) do 
+# >>>>>>> 625a67169511472f80f3f42df78766d9e2701a5e
       {v,r} = pdecode1(bin)
       pdecode(r,[v|acc])
   end

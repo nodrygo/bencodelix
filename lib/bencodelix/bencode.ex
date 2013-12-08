@@ -54,12 +54,12 @@ defimpl Bencode,  for: BitString do
 
   def encode(_), do:  raise "encode error not a printable String"
 
-  def decode(s), do: pdecode(String.replace(s,"\n"," "),[])
+  def decode(s), do: pdecode(s,[])
 
   defp pdecode(<<>>,acc) do 
     [first|rest] = acc
     if length(rest) >0 do 
-       acc 
+       :lists.reverse acc 
     else
        first
     end
@@ -93,11 +93,11 @@ defimpl Bencode,  for: BitString do
 
   # decode string
   defp pdecode1(<<n::integer, x::binary>> = bin)  when n >= ?0 and n <= ?9 do
-    case Regex.run(%r/^([0-9]+):(.*)/gm, bin) do 
+    case Regex.run(%r/^([0-9]+):(.*)/sgm, bin) do 
       [_, strl,r ] -> {lon,_} = Integer.parse(strl)
                        <<s::[binary, size(lon)],rest::binary>> = r
                         {s,rest}
-      nil ->  {"Fal Decode string",x} 
+      nil ->  {"Fatal Decode string",x} 
     end                  
   end
 
